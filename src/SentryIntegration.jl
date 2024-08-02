@@ -357,14 +357,12 @@ function capture_message(message, level::String; tags = nothing, attachments::Ve
 end
 
 # This assumes that we are calling from within a catch
-function capture_exception(exc::Exception; tags = nothing, transaction = nothing; kw_event...)
-    capture_exception([(exc, catch_backtrace())]; tags, transaction, kw_event...)
+function capture_exception(exc::Exception; kw_event...)
+    capture_exception([(exc, catch_backtrace())]; kw_event...)
 end
 
 function capture_exception(
     exceptions = current_exceptions();
-    tags = nothing,
-    transaction = nothing,
     level = "error",
     kw_event...,
 )
@@ -387,8 +385,6 @@ function capture_exception(
         Event(;
             exception = (; values = formatted_excs),
             level,
-            tags,
-            transaction,
             kw_event...,
         ),
     )
